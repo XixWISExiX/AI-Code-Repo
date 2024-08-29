@@ -69,23 +69,30 @@ def BFS(start: str) -> list:
     # END: Your code here
 
 
-# TODO redo this so you don't have the variables here
-def DFS(start: str, visited=[], goal_found=[False]) -> list:
-    # START: Your code here
-    if start in visited: return visited
-    if goal_found[0]: return visited
-    visited.append(start)
-    if start == 'G':
-        goal_found[0] = True
-        return visited
 
-    idx = letter_to_index[start]
-    for i in range(len(adjacencyMatrix[idx])):
-        if adjacencyMatrix[idx][i] != -1:
-            letter = index_to_letter[i]
-            DFS(letter, visited, goal_found)
-    return visited
+def DFS(start: str) -> list:
+    # START: Your code here
+    visited=[]
+    goal_found=[False]
+
+    def dfs(node):
+        if node in visited: return visited
+        if goal_found[0]: return visited
+        visited.append(node)
+        if node == 'G':
+            goal_found[0] = True
+            return visited
+
+        idx = letter_to_index[node]
+        for i in range(len(adjacencyMatrix[idx])):
+            if adjacencyMatrix[idx][i] != -1:
+                letter = index_to_letter[i]
+                dfs(letter)
+        return visited
+    return dfs(start)
     # END: Your code here
+
+
 
 import heapq # import Priority Queue
 def GBFS(start: str) -> list:
@@ -121,10 +128,10 @@ def run_tests():
     assert BFS('S') == ['S', 'C', 'D', 'B', 'H', 'L', 'A', 'F', 'K', 'Q', 'G'], "Test case 2 failed"
 
     # Test case 3: DFS starting from node 'A'
-    assert DFS('A', visited=[], goal_found=[False]) == ['A', 'B', 'C', 'H', 'K', 'F', 'E', 'I', 'J', 'N', 'G'], "Test case 3 failed"
+    assert DFS('A') == ['A', 'B', 'C', 'H', 'K', 'F', 'E', 'I', 'J', 'N', 'G'], "Test case 3 failed"
     
     # Test case 4: DFS starting from node 'S'
-    assert DFS('S', visited=[], goal_found=[False]) == ['S', 'C', 'B', 'A', 'E', 'F', 'J', 'I', 'M', 'G'], "Test case 4 failed"
+    assert DFS('S') == ['S', 'C', 'B', 'A', 'E', 'F', 'J', 'I', 'M', 'G'], "Test case 4 failed"
 
     # Test case 5: GBFS starting from node 'A'
     assert GBFS('A') == ['A', 'B', 'F', 'J', 'N', 'G'], "Test case 5 failed"
