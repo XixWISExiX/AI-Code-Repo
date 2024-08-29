@@ -16,8 +16,6 @@
 #     The test cases below call each search function on node 'S' and node 'A'
 # -----------------------------
 
-# TODO complete making environment and store it in a class
-
                     #A  #B  #C  #D  #E  #F  #G  #H  #I  #J  #K  #L  #M  #N  #P  #Q  #S
 adjacencyMatrix = [[-1,  4, -1, -1,  1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1], #A
                    [ 4, -1,  2, -1, -1,  2, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1], #B
@@ -44,6 +42,10 @@ letter_to_index = {'A':0, 'B':1, 'C':2, 'D':3, 'E':4, 'F':5, 'G':6,
 index_to_letter = {0:'A', 1:'B', 2:'C', 3:'D', 4:'E', 5:'F', 6:'G',
                    7:'H', 8:'I', 9:'J', 10:'K', 11:'L', 12:'M', 13:'N',
                    14:'P', 15:'Q', 16:'S'}
+                
+expected_letter_value = {'A':10, 'B':9, 'C':16, 'D':21, 'E':13, 'F':9, 'G':0,
+                         'H':12, 'I':9, 'J':5, 'K':8, 'L':18, 'M':3, 'N':4,
+                         'P':6, 'Q':9, 'S':17}
 
 
 def BFS(start: str) -> list:
@@ -56,39 +58,56 @@ def BFS(start: str) -> list:
             front = queue.pop(0)
         visited.append(front)
         idx = letter_to_index[front]
-        # row_list = []
         for i in range(len(adjacencyMatrix[idx])):
             if adjacencyMatrix[idx][i] != -1:
                 letter = index_to_letter[i]
-                # row_list.append(letter)
-                # TODO once it gets in proximity to goal we need to get close to it
                 if letter == 'G':
                     visited.append('G')
-                    print(visited)
                     return visited
                 queue.append(letter)
-                
-
-        # row_list.sort()
-        # print("row", row_list)
-        # for item in row_list:
-        #     if item not in visited: # not efficient check, but it's fine
-        # #         visited.append(item)
-        #         queue.append(item)
-
     return visited # Goal state not found
     # END: Your code here
 
 
-def DFS(start: str) -> list:
+# TODO redo this so you don't have the variables here
+def DFS(start: str, visited=[], goal_found=[False]) -> list:
     # START: Your code here
-    return []
+    if start in visited: return visited
+    if goal_found[0]: return visited
+    visited.append(start)
+    if start == 'G':
+        goal_found[0] = True
+        return visited
+
+    idx = letter_to_index[start]
+    for i in range(len(adjacencyMatrix[idx])):
+        if adjacencyMatrix[idx][i] != -1:
+            letter = index_to_letter[i]
+            DFS(letter, visited, goal_found)
+    return visited
     # END: Your code here
 
-
+import heapq # import Priority Queue
 def GBFS(start: str) -> list:
     # START: Your code here
-    return []
+    visited = []
+    priority_queue = [(expected_letter_value[start], (start))] # sort by the expected value
+    while priority_queue != []:
+        front = heapq.heappop(priority_queue)[1]
+        while front in visited: 
+            front = heapq.heappop(priority_queue)[1]
+        visited.append(front)
+        idx = letter_to_index[front]
+        for i in range(len(adjacencyMatrix[idx])):
+            value = adjacencyMatrix[idx][i]
+            if value != -1:
+                letter = index_to_letter[i]
+                if letter == 'G':
+                    visited.append('G')
+                    return visited
+                value = expected_letter_value[letter]
+                heapq.heappush(priority_queue, (value, letter))
+    return visited # Goal state not found
     # END: Your code here
 
 
@@ -102,10 +121,10 @@ def run_tests():
     assert BFS('S') == ['S', 'C', 'D', 'B', 'H', 'L', 'A', 'F', 'K', 'Q', 'G'], "Test case 2 failed"
 
     # Test case 3: DFS starting from node 'A'
-    assert DFS('A') == ['A', 'B', 'C', 'H', 'K', 'F', 'E', 'I', 'J', 'N', 'G'], "Test case 3 failed"
+    assert DFS('A', visited=[], goal_found=[False]) == ['A', 'B', 'C', 'H', 'K', 'F', 'E', 'I', 'J', 'N', 'G'], "Test case 3 failed"
     
     # Test case 4: DFS starting from node 'S'
-    assert DFS('S') == ['S', 'C', 'B', 'A', 'E', 'F', 'J', 'I', 'M', 'G'], "Test case 4 failed"
+    assert DFS('S', visited=[], goal_found=[False]) == ['S', 'C', 'B', 'A', 'E', 'F', 'J', 'I', 'M', 'G'], "Test case 4 failed"
 
     # Test case 5: GBFS starting from node 'A'
     assert GBFS('A') == ['A', 'B', 'F', 'J', 'N', 'G'], "Test case 5 failed"
