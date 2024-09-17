@@ -40,28 +40,19 @@ w = [-1, -1, -1, -1, -1, -1]
 # Init w'
 w_prime = [1, 1, 1, 1, 1, 1]
 
-# Local Search General Code
-def minimize_er_w(w, w_prime):
-    while True:
-        fx = [0] * len(X)
-        fxprime = [0] * len(X)
-        er_w_sum = 0
-        er_w_prime_sum = 0
-        for i in range(len(X)):
-            for j in range(len(X.columns)):
-                fx[i] += w[j] * X.iloc[i,j]
-                fxprime[i] += w_prime[j] * X.iloc[i,j]
-            er_w_sum += (fx[i] - y[i])**2
-            er_w_prime_sum += (fxprime[i] - y[i])**2
-        er_w = er_w_sum  / len(X)
-        er_w_prime = er_w_prime_sum  / len(X)
-        if(er_w_prime < er_w):
-            w = w_prime
-        else:
-            break
-    print('Optimized w (general local search) =',w)
+# Genetic Search General Code
+# def evolve(fitness function):
+#     population = 1000
+#     evaluation = evaluate(population, fitness)
+#     while(evaluation < goal and time left to run):
+#         new_population = set([])
+#         while(new_population is not finished):
+#             select individuals from population
+#             crossover & mutate
+#         population = new_population
+#         evaluation = evaluate(population, fitness)
+#     return best current solution
 
-minimize_er_w(w, w_prime)
 
 ############################################################################
 # TASK 2
@@ -79,6 +70,37 @@ def find_er_w(w):
 
 # TODO Task 2
 # fitness function = e^(-er(w))
+import copy
+import math
+import matplotlib.pyplot as plt
+import numpy as np
+import random
 
-def genetic_search(w, threshold=1000):
-    return 'a'
+def fitness(w):
+    return math.exp(-find_er_w(w))
+
+def genetic_search(w, population_size=4, threshold=1000):
+    population = np.random.choice([-1,1], size=(population_size, len(X))) # Generate a random population
+    # print(population)
+    for generation in range(threshold):
+        fitnesses = np.array([fitness(w) for w in population])
+        # print(fitnesses)
+        new_population = []
+
+        for _ in range(population_size // 2):
+            # print(sum(fitnesses))
+            probabilities = 1 - (fitnesses / sum(fitnesses)) # Lower error = higher probability
+            # print(sum(probabilites))
+            parent1 = random.choices(population, weights=probabilities, k=1)[0]
+            parent2 = random.choices(population, weights=probabilities, k=1)[0]
+            new_population.append(parent1)
+            new_population.append(parent2)
+
+            # TODO implement crossover
+            # TODO implement mutation
+        population = new_population
+        
+
+    return 'NOT DONE'
+
+genetic_search(w)
