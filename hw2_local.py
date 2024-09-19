@@ -119,9 +119,8 @@ def hill_climbing_local_search(w, threshold=1000):
     plt.plot(rounds, er_w_trasformations, marker='o', linestyle='-', color='b', label='Error')
     plt.xlabel('Round of Search')
     plt.ylabel('Error (er_w)')
-    plt.title('Search Hill Climbing Local Search, Error vs. Round')
+    plt.title('Hill Climbing Local Search, Error vs. Round')
     plt.show()
     return w
 
-# TODO Record answer in pdf file
 hill_climbing_local_search([-1,-1,-1,-1,-1,-1])
