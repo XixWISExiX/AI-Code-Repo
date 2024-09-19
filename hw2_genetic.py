@@ -87,20 +87,20 @@ import random
 def fitness(w):
     return math.exp(-find_er_w(w))
 
-def genetic_search(population_size=8, threshold=500):
+def genetic_search(population_size=8, threshold=2000):
     population = np.random.choice([-1,1], size=(population_size, len(X.columns))) # Generate a random population
     rounds = []
     er_w_trasformations = []
     # TODO find a way to store min er_w
-    # prev_fitnesses = [10*population_size]
+    fitnesses = []
     for generation in range(threshold):
+        prev_fitnesses = fitnesses
         fitnesses = np.array([fitness(w) for w in population])
 
         # if sum(prev_fitnesses) < sum(fitnesses):
             # print(sum(prev_fitnesses), sum(fitnesses))
             # break
         
-        prev_fitnesses = fitnesses
         rounds.append(generation)
 
         new_population = []
@@ -125,14 +125,21 @@ def genetic_search(population_size=8, threshold=500):
             random_index = np.random.randint(0, len(crossover))
             crossover[random_index] *= -1
 
+            # TODO see if new fitnesses are worthy of replacement
+            if prev_fitnesses != [] and sum(prev_fitnesses) < sum(fitnesses):
+                print('ligma')
+                fitnesses = prev_fitnesses
+
+
+
             print("Generation:", generation, "Chromosome", chromosome, crossover)
             new_population.append(crossover)
 
         population = new_population
         generation_er_ws = np.array([find_er_w(w) for w in population])
         # w_primes = np.array([fitness(w) for w in population])
-        # er_w_trasformations.append(sum(w_primes)/population_size)
-        er_w_trasformations.append(min(generation_er_ws))
+        er_w_trasformations.append(sum(generation_er_ws)/population_size)
+        # er_w_trasformations.append(min(generation_er_ws))
 
     w_primes = np.array([find_er_w(w) for w in population])
     print("Current w's in population", w_primes)

@@ -123,5 +123,4 @@ def hill_climbing_local_search(w, threshold=1000):
     plt.show()
     return w
 
-# TODO Record answer in pdf file
 hill_climbing_local_search([-1,-1,-1,-1,-1,-1])
