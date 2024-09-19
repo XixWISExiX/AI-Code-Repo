@@ -76,10 +76,6 @@ def find_er_w(w):
     
     return er_w
 
-
-print(find_er_w(w))
-print('---')
-
 import math
 import matplotlib.pyplot as plt
 import random
@@ -87,36 +83,23 @@ import random
 def fitness(w):
     return math.exp(-find_er_w(w))
 
-def genetic_search(population_size=8, threshold=2000):
-    population = np.random.choice([-1,1], size=(population_size, len(X.columns))) # Generate a random population
+def genetic_search(w, population_size=2, threshold=200, color='r', debug=False):
+    population = [w] * population_size
     rounds = []
     er_w_trasformations = []
-    # TODO find a way to store min er_w
-    fitnesses = []
+    all_time_best_er = 10
+    all_time_best_w = []
+
     for generation in range(threshold):
-        prev_fitnesses = fitnesses
         fitnesses = np.array([fitness(w) for w in population])
-
-        # if sum(prev_fitnesses) < sum(fitnesses):
-            # print(sum(prev_fitnesses), sum(fitnesses))
-            # break
-        
         rounds.append(generation)
-
         new_population = []
 
-        for chromosome in range(population_size // 2):
-            probabilities = (1-fitnesses) / sum(1-fitnesses) # Lower error = higher probability
-            # probabilities = (fitnesses / sum(fitnesses)) # Lower error = higher probability
-
-            # print("fit",fitnesses)
-            # print("prob",probabilities)
-            # print("prob sum",sum(probabilities))
+        for chromosome in range(population_size):
+            probabilities = (fitnesses / sum(fitnesses)) # More fit = Higher Probability
 
             parent1 = random.choices(population, weights=probabilities, k=1)[0]
             parent2 = random.choices(population, weights=probabilities, k=1)[0]
-            new_population.append(parent1)
-            new_population.append(parent2)
 
             # Crossover
             crossover = np.append(parent1[:3], parent2[3:])
@@ -125,63 +108,61 @@ def genetic_search(population_size=8, threshold=2000):
             random_index = np.random.randint(0, len(crossover))
             crossover[random_index] *= -1
 
-            # TODO see if new fitnesses are worthy of replacement
-            if prev_fitnesses != [] and sum(prev_fitnesses) < sum(fitnesses):
-                print('ligma')
-                fitnesses = prev_fitnesses
 
-
-
-            print("Generation:", generation, "Chromosome", chromosome, crossover)
+            if debug:
+                print("Generation:", generation, "| Chromosome", chromosome, "| Crossover", crossover)
             new_population.append(crossover)
 
+
         population = new_population
+
         generation_er_ws = np.array([find_er_w(w) for w in population])
-        # w_primes = np.array([fitness(w) for w in population])
-        er_w_trasformations.append(sum(generation_er_ws)/population_size)
-        # er_w_trasformations.append(min(generation_er_ws))
+        fitnesses_of_pop = np.array([fitness(w) for w in population])
 
-    w_primes = np.array([find_er_w(w) for w in population])
-    print("Current w's in population", w_primes)
+        min_w_idx = np.argmin(generation_er_ws) 
+        if generation_er_ws[min_w_idx] < all_time_best_er:
+            all_time_best_er = generation_er_ws[min_w_idx]
+            all_time_best_w = population[min_w_idx]
+
+        er_w_trasformations.append(min(generation_er_ws))
 
 
+    min_w_idx = np.argmin(fitnesses_of_pop) 
+    curr_w = population[min_w_idx]
 
+    if debug:
+        print("Current w's in population =", population)
+        print('Best w in population currently =', curr_w)
+        print('Best w of all time =', all_time_best_er)
+        print('Best er(w) of all time =', all_time_best_w)
 
 
     plt.figure(figsize=(8,6))
-    plt.plot(rounds, er_w_trasformations, marker='o', linestyle='-', color='b', label='Error')
     plt.xlabel('Round of Search')
     plt.ylabel('Error (er_w)')
-    plt.title('Generation Search, Error vs. Round')
-    plt.show()
+    plt.title('Generation Search for 5 Complete Runs, Error vs. Round')
+    plt.close()
+    plt.plot(rounds, er_w_trasformations, marker='o', linestyle='-', color=color, label='Error')
         
+    return population, curr_w, all_time_best_er, all_time_best_w
 
-    return 'NOT DONE'
+population = [0] * 5
+curr_w = [0] * 5
+all_time_best_er = [0] * 5
+all_time_best_w = [0] * 5
 
-genetic_search()
-# print(find_er_w([1,-1,1,-1,1,1]))
+population[0], curr_w[0], all_time_best_er[0], all_time_best_w[0] = genetic_search(w, color='#ADD8E6')
+population[1], curr_w[1], all_time_best_er[1], all_time_best_w[1] = genetic_search(w, color='#87CEEB')
+population[2], curr_w[2], all_time_best_er[2], all_time_best_w[2] = genetic_search(w, color='#4682B4')
+population[3], curr_w[3], all_time_best_er[3], all_time_best_w[3] = genetic_search(w, color='#0000CD')
+population[4], curr_w[4], all_time_best_er[4], all_time_best_w[4] = genetic_search(w, color='#000080')
 
-#----------------------------------------------------------------------------------------------------------
+for i in range(5):
+    print("For run", i+1)
+    print("Current w's in population =", population[i])
+    print('Best w in population currently =', curr_w[i])
+    print('Best w of all time =', all_time_best_er[i])
+    print('Best er(w) of all time =', all_time_best_w[i])
+    print()
 
-# # Compare all values
-# import itertools
-# import numpy as np
-
-# # Original array for reference
-# arr = [1, 1, 1, 1, 1, 1]
-
-# # Generate all permutations (combinations) of length 6 with values either 1 or -1
-# permutations = list(itertools.product([1, -1], repeat=len(arr)))
-
-# # Convert to a NumPy array if needed
-# permutations_array = np.array(permutations)
-
-# print(permutations_array)
-# print("--------------------------------------------")
-
-# min_val = 10
-# for perm in permutations_array:
-#     er_w = find_er_w(perm)
-#     print(er_w)
-#     min_val = min(min_val, er_w)
-# print("min",min_val)
+plt.show()
