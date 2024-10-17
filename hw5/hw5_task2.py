@@ -25,9 +25,10 @@ label_test = data[n-num_test:,-1]
 
 # --- Your Task --- #
 # pick a proper number of iterations 
-num_iter = ...
+num_iter = 1000
 # randomly initialize your w 
-w = ...
+w = [0] * (p-1)
+alpha = 0.01
 # --- end of task --- #
 
 er_test = []
@@ -39,13 +40,12 @@ er_test = []
 for iter in range(num_iter): 
 
     ## update w
-    # ......
-    # ......
-    # ......
+    y_hat = 1 / (1 + np.exp(-1 * np.dot(sample_train, w)))  # Prediction
+    error = label_train - y_hat      # Error
+    w = w + alpha * np.dot((label_train - y_hat) * y_hat * (1 - y_hat), sample_train) # w update
 
     ## evaluate testing error of the updated w 
-    # we should measure classification error here 
-    er = ......
+    er = 1 - np.mean(label_train == np.where(y_hat >= 0.5, 1, 0))
     er_test.append(er)
 # --- end of task --- #
     
@@ -53,6 +53,5 @@ plt.figure()
 plt.plot(er_test)
 plt.xlabel('Iteration')
 plt.ylabel('Classification Error')
-
-
-
+plt.title('Logistic Regression')
+plt.show()
