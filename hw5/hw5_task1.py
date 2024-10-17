@@ -25,7 +25,7 @@ label_test = np.array(data[n-num_test:,-1])
 
 # --- Your Task --- #
 # pick a proper number of iterations 
-num_iter = 1000
+num_iter = 200
 # randomly initialize your w 
 w = np.array([0] * (p-1)) # must be small because our method only goes up.
 # --- end of task --- #
@@ -45,7 +45,8 @@ for i in range(num_iter):
     w = w + alpha * np.dot(error, sample_train) / len(label_train) # w update
 
     ## evaluate testing error of the updated w 
-    er = np.sum((y_hat - label_train) ** 2) / len(label_train)
+    y_hat = np.dot(sample_test, w)  # Test Prediction
+    er = np.sum((label_test - y_hat) ** 2) / len(label_test) # MSE
 
     er_test.append(er)
 # --- end of task --- #
@@ -57,8 +58,8 @@ plt.ylabel('Classification Error')
 plt.title('Linear Regression')
 plt.show()
 
-print('For this implementation of linear regression i did not use derivaties via the video over this section for this class.')
-print('So instead i used the sum of the errors times x times some small number alpha plus w. I did use dot product instead of for loops.')
+# TODO REDO THIS PART
+print("For the update function used the sum of the errors times x times some small number alpha plus w. I did use dot product instead of for loops, but it's the same function as used in the video")
 print('That was the main method for updating the w values and then the R^2 for evaluating the results.')
 print('Of which we can see the results decreasing the error term with each given iteration starting from an R^2 of 130 to an R^2 of around 20')
 print('in around 10 iterations, but gets less and less smaller with each iteration with diminishing returns.')

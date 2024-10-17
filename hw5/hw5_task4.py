@@ -32,9 +32,10 @@ er_test = []
 for k in k_values: 
     # --- Your Task --- #
     # implement the kNN classification method 
-    # ......
-    # ......
-    # ......
+        
+
+    y_hat = np.sum(y)        
+    
 
     # store classification error on testing data here 
     er = ......
