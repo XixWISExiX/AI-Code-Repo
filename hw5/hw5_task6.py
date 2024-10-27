@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 
 # -------------------------------------
 # load data 
-data = np.loadtxt('diabetes.csv', delimiter=',')
+data = np.loadtxt('../data_sets/diabetes.csv', delimiter=',')
 [n,p] = np.shape(data)
 # 75% for training, 25% for testing 
 num_train = int(0.75*n)
