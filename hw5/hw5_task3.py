@@ -80,23 +80,47 @@ while not converged and iteration < max_iterations:
 # --- end of task --- #
 
 
-# the following code plot your clustering result in a 2D space
-pca = PCA(n_components=2)
+# # the following code plot your clustering result in a 2D space
+# pca = PCA(n_components=2)
+# pca.fit(sample)
+# sample_pca = pca.transform(sample)
+# idx = []
+# colors = ['blue','red','green','m']
+
+# for i in range(k):
+#      idx = np.where(label_cluster == i)
+#      plt.scatter(sample_pca[idx,0], sample_pca[idx,1] ,color=colors[i],facecolors='none')
+# plt.xlabel('Average x1')
+# plt.ylabel('Average x2')
+# plt.title('2D Plot of K-Means Clustering Algorithm')
+# plt.show()
+
+# the following code plot your clustering result in a 3D space
+pca = PCA(n_components=3)
 pca.fit(sample)
 sample_pca = pca.transform(sample)
 idx = []
 colors = ['blue','red','green','m']
+
+fig = plt.figure()
+ax = plt.axes(projection='3d')
+
 for i in range(k):
      idx = np.where(label_cluster == i)
-     plt.scatter(sample_pca[idx,0],sample_pca[idx,1],color=colors[i],facecolors='none')
-plt.xlabel('Average x1')
-plt.ylabel('Average x2')
-plt.title('2D Plot of K-Means Clustering Algorithm')
+     ax.scatter(sample_pca[idx,0], sample_pca[idx,1], sample_pca[idx,2], color=colors[i], facecolors='none')
+ax.set_xlabel('Average x1')
+ax.set_ylabel('Average x2')
+ax.set_zlabel('Average x3')
+plt.title('3D Plot of K-Means Clustering Algorithm')
 plt.show()
 
-# TODO REDO THIS PART
 print("For this algorithm implementation of K-Means I used numpy for the computation of euclidean distance.")
 print("In this case, being in 100D, which saves time without a python for loop.")
 print("Along with other additions to simply code output and time as well (like mp.mean).")
 print("There is also a threashold to ignore super small changes to not go through all iterations, so that is more of an optimization change that doesn't affect the core algorithm.")
-print("From what we can see, we can ")
+
+print("For k=2 in 2D, we can see a divide between the two groups from the middle and this sort of grouping seems to be fine, but seems like a higher k value could be more beneficial.")
+
+print("For k=3 in 2D, we can see a divide between the three groups, one in the middle like before but also one for the top section which is more scattered out and seems that it does a better job at describing the feature distribution than k=2.")
+
+print("For k=3 in 3D, we can see that the green values also have a higher x3 axis value than we could previously see in the 2D plot. So we can further back our assumption that k=3 is more informative than a k=2 plot would be because we wouldn't have gotten much more information from that extra axis in the k=2 case.")

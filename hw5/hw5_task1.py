@@ -25,7 +25,7 @@ label_test = np.array(data[n-num_test:,-1])
 
 # --- Your Task --- #
 # pick a proper number of iterations 
-num_iter = 200
+num_iter = 25
 # randomly initialize your w 
 w = np.array([0] * (p-1)) # must be small because our method only goes up.
 # --- end of task --- #
@@ -58,10 +58,8 @@ plt.ylabel('Classification Error')
 plt.title('Linear Regression')
 plt.show()
 
-# TODO REDO THIS PART
 print("For the update function used the sum of the errors times x times some small number alpha plus w. I did use dot product instead of for loops, but it's the same function as used in the video")
-print('That was the main method for updating the w values and then the R^2 for evaluating the results.')
-print('Of which we can see the results decreasing the error term with each given iteration starting from an R^2 of 130 to an R^2 of around 20')
-print('in around 10 iterations, but gets less and less smaller with each iteration with diminishing returns.')
+print('That was the main method for updating the w values and then the MSE for evaluating the results.')
+print('Of which we can see the results decreasing the error term with each given iteration starting from an MSE of 130 to an MSE of around 20 in around 5 iterations.')
 
 

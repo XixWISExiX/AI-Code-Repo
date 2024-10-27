@@ -60,7 +60,9 @@ plt.figure()
 plt.plot(k_values, er_test)
 plt.xlabel('k')
 plt.ylabel('Classification Error')
+plt.title('K Nearest Neighbors')
 plt.show()
 
 
-
+print("The algorithm above uses numpy for finding the closest values, along with a distance library to easily calculate distance. Overall this k nearest neighbors was way easier to implement in comparision to k means mostly due to the lack of centriods.")
+print("At k=1 and k=2 we can tell that the error is to large and likely an overfit because we are finding the immediate values closest to the point. By k=3 this improves and by k=5 we get our lowest error. When k>5 the error seems to increase again lead me to assume that the model is now more on the underfitting side (averge to the whole data set is not useful for example).")
