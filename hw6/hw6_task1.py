@@ -24,7 +24,7 @@ col_size = len(policy[0])
 
 
 # Init number of experiments and gamma
-experiments = 10
+experiments = 1000
 gamma = 0.8
 
 
@@ -34,11 +34,12 @@ for col in range(col_size):
         if row == 0 and col == 3: continue #  On +1 terminal state
         if row == 1 and col == 3: continue #  On -1 terminal state
 
-        r = row # init row to traverse
-        c = col # init col to traverse
         rewards = [] # init rewards array
-        state = policy[r][c] # starting state
         for _ in range(experiments):
+            r = row # init row to traverse
+            c = col # init col to traverse
+            state = policy[r][c] # starting state
+
             reward = 0 # Init reward
             time_step = 1 # Init time step
             while True:
