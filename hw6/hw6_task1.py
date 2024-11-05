@@ -23,9 +23,8 @@ row_size = len(policy)
 col_size = len(policy[0])
 
 
-# Init number of experiments, reward array, and gamma
+# Init number of experiments and gamma
 experiments = 10
-rewards = []
 gamma = 0.8
 
 
@@ -37,6 +36,7 @@ for col in range(col_size):
 
         r = row # init row to traverse
         c = col # init col to traverse
+        rewards = [] # init rewards array
         state = policy[r][c] # starting state
         for _ in range(experiments):
             reward = 0 # Init reward
