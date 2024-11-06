@@ -93,4 +93,4 @@ for col in range(col_size):
             rewards.append(reward)
 
         # Print Results
-        print("(", col+1,",", row_size-row, ") ", np.average(rewards), sep="")
+        print("(", col+1,",", row_size-row, ") ", round(np.average(rewards), 3), sep="")
